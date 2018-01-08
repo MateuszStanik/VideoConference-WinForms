@@ -14,6 +14,8 @@ namespace VideoConference
     {
         public class Chat : XSocketController
         {
+
+
             public void ChatMessage1(string message)
             {
                 this.InvokeToAll(message, "ChatMessage");
