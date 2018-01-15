@@ -35,7 +35,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Messages = new System.Windows.Forms.RichTextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -103,19 +102,11 @@
             this.Messages.TabIndex = 8;
             this.Messages.Text = "Wiadomośći z telekonferencji";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(318, 446);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(252, 22);
-            this.textBox1.TabIndex = 9;
-            // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(862, 521);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -144,7 +135,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RichTextBox Messages;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

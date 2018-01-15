@@ -22,12 +22,12 @@ namespace VideoConference
         private void CreateConnection_Click(object obj, EventArgs e)
         {
             var c = new XSocketClient("ws://127.0.0.1:4502", "http://localhost", "generic");
-            c.OnConnected += (sender, eventArgs) => Messages.AppendText("Connected");
+            c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected" + Environment.NewLine);
             c.Controller("generic").OnOpen += (sender, connectArgs) => { 
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText("Generic Open");
+                        Messages.AppendText("Generic Open" + Environment.NewLine);
                     }));
                 c.Controller("generic").Invoke("CallAllClients");
             };
@@ -38,7 +38,7 @@ namespace VideoConference
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText("Syntaxerror did it!!! ");
+                        Messages.AppendText("Syntaxerror did it!!! " + Environment.NewLine);
                     }));
             });
             
