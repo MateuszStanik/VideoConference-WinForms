@@ -35,6 +35,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Messages = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -42,7 +43,7 @@
             // CreateConnection
             // 
             this.CreateConnection.BackColor = System.Drawing.Color.DarkCyan;
-            this.CreateConnection.Location = new System.Drawing.Point(23, 446);
+            this.CreateConnection.Location = new System.Drawing.Point(23, 563);
             this.CreateConnection.Name = "CreateConnection";
             this.CreateConnection.Size = new System.Drawing.Size(263, 30);
             this.CreateConnection.TabIndex = 0;
@@ -69,7 +70,7 @@
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.OrangeRed;
-            this.button3.Location = new System.Drawing.Point(576, 446);
+            this.button3.Location = new System.Drawing.Point(576, 563);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(263, 30);
             this.button3.TabIndex = 4;
@@ -96,17 +97,27 @@
             // 
             // Messages
             // 
-            this.Messages.Location = new System.Drawing.Point(23, 349);
+            this.Messages.Location = new System.Drawing.Point(23, 378);
             this.Messages.Name = "Messages";
-            this.Messages.Size = new System.Drawing.Size(816, 91);
+            this.Messages.Size = new System.Drawing.Size(816, 179);
             this.Messages.TabIndex = 8;
-            this.Messages.Text = "Wiadomośći z telekonferencji";
+            this.Messages.Text = "";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(23, 355);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(191, 17);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Wiadomośći z telekonferencji";
             // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(862, 521);
+            this.ClientSize = new System.Drawing.Size(890, 615);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -114,6 +125,7 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.CreateConnection);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Conference";
             this.ShowIcon = false;
@@ -135,6 +147,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RichTextBox Messages;
+        private System.Windows.Forms.Label label3;
     }
 }
 

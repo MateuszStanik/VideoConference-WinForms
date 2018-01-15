@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoConference", "VideoCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{02B33D29-7A41-4F49-84F9-E1A969F0AF03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitOfWork", "UnitOfWork\UnitOfWork.csproj", "{72E813BA-54C9-4A99-B428-EB9102E72642}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainModels", "DomainModels\DomainModels.csproj", "{BA047ACA-D0DC-43CE-8353-91E8E6C26523}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{02B33D29-7A41-4F49-84F9-E1A969F0AF03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02B33D29-7A41-4F49-84F9-E1A969F0AF03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02B33D29-7A41-4F49-84F9-E1A969F0AF03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E813BA-54C9-4A99-B428-EB9102E72642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72E813BA-54C9-4A99-B428-EB9102E72642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72E813BA-54C9-4A99-B428-EB9102E72642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72E813BA-54C9-4A99-B428-EB9102E72642}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA047ACA-D0DC-43CE-8353-91E8E6C26523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA047ACA-D0DC-43CE-8353-91E8E6C26523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA047ACA-D0DC-43CE-8353-91E8E6C26523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA047ACA-D0DC-43CE-8353-91E8E6C26523}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
