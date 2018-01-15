@@ -1,6 +1,6 @@
 ﻿namespace VideoConference
 {
-    partial class Form1
+    partial class Conference
     {
         /// <summary>
         /// Required designer variable.
@@ -28,39 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.CreateConnection = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.Messages = new System.Windows.Forms.RichTextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // CreateConnection
             // 
-            this.button1.BackColor = System.Drawing.Color.DarkCyan;
-            this.button1.Location = new System.Drawing.Point(23, 446);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(263, 30);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Utwórz konferencje";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.DarkCyan;
-            this.button2.Location = new System.Drawing.Point(292, 446);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(278, 30);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Zaproś użytkownika";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.CreateConnection.BackColor = System.Drawing.Color.DarkCyan;
+            this.CreateConnection.Location = new System.Drawing.Point(23, 446);
+            this.CreateConnection.Name = "CreateConnection";
+            this.CreateConnection.Size = new System.Drawing.Size(263, 30);
+            this.CreateConnection.TabIndex = 0;
+            this.CreateConnection.Text = "Utwórz konferencje";
+            this.CreateConnection.UseVisualStyleBackColor = false;
+            this.CreateConnection.Click += new System.EventHandler(this.CreateConnection_Click);
             // 
             // pictureBox1
             // 
@@ -106,29 +95,36 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Nazwa_uzytkownika";
             // 
-            // richTextBox1
+            // Messages
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(23, 349);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(816, 91);
-            this.richTextBox1.TabIndex = 8;
-            this.richTextBox1.Text = "Wiadomośći z telekonferencji";
+            this.Messages.Location = new System.Drawing.Point(23, 349);
+            this.Messages.Name = "Messages";
+            this.Messages.Size = new System.Drawing.Size(816, 91);
+            this.Messages.TabIndex = 8;
+            this.Messages.Text = "Wiadomośći z telekonferencji";
             // 
-            // Form1
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(318, 446);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(252, 22);
+            this.textBox1.TabIndex = 9;
+            // 
+            // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(862, 486);
-            this.Controls.Add(this.richTextBox1);
+            this.ClientSize = new System.Drawing.Size(862, 521);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.Messages);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.CreateConnection);
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "Conference";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Video Conference App";
@@ -141,14 +137,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button CreateConnection;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox Messages;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
