@@ -65,6 +65,7 @@
             // 
             // ReceivedPic
             // 
+            this.ReceivedPic.Image = ((System.Drawing.Image)(resources.GetObject("ReceivedPic.Image")));
             this.ReceivedPic.Location = new System.Drawing.Point(440, 24);
             this.ReceivedPic.Name = "ReceivedPic";
             this.ReceivedPic.Size = new System.Drawing.Size(399, 302);

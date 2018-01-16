@@ -125,8 +125,9 @@ namespace VideoConference
                 //mytcpl = new TcpListener(ipaddress, 4502);
                 // Open The Port
 
-                mytcpl = new TcpListener(4502);
+                mytcpl = new TcpListener(4503);
                 mytcpl.Start();						 // Start Listening on That Port
+                //********TU SIE SYPIE************
                 mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
                 ns = new NetworkStream(mysocket);	 // Receives The Binary Data From Port
 
@@ -166,8 +167,6 @@ namespace VideoConference
                     bmap = ((Image)(data.GetData(typeof(System.Drawing.Bitmap))));
                     bmap.Save(ms, ImageFormat.Bmp);
                 }
-
-                //Wywala sie tu!!!
                 CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 byte[] arrImage = ms.GetBuffer();
                 myclient = new TcpClient(remote_IP, port_number);//Connecting with server
