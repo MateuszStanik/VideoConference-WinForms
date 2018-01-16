@@ -51,6 +51,11 @@
   <ItemGroup>
     <Compile Include="Abstract\IEFDbContext.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Migrations\201801152216225_mig1.cs" />
+    <Compile Include="Migrations\201801152216225_mig1.Designer.cs">
+      <DependentUpon>201801152216225_mig1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +67,11 @@
       <Project>{BA047ACA-D0DC-43CE-8353-91E8E6C26523}</Project>
       <Name>DomainModels</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201801152216225_mig1.resx">
+      <DependentUpon>201801152216225_mig1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -28,16 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Conference));
             this.CreateConnection = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.CapturingPic = new System.Windows.Forms.PictureBox();
+            this.ReceivedPic = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Messages = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).BeginInit();
             this.SuspendLayout();
             // 
             // CreateConnection
@@ -51,21 +54,22 @@
             this.CreateConnection.UseVisualStyleBackColor = false;
             this.CreateConnection.Click += new System.EventHandler(this.CreateConnection_Click);
             // 
-            // pictureBox1
+            // CapturingPic
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(23, 24);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(399, 302);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
+            this.CapturingPic.Image = ((System.Drawing.Image)(resources.GetObject("CapturingPic.Image")));
+            this.CapturingPic.Location = new System.Drawing.Point(23, 24);
+            this.CapturingPic.Name = "CapturingPic";
+            this.CapturingPic.Size = new System.Drawing.Size(399, 302);
+            this.CapturingPic.TabIndex = 2;
+            this.CapturingPic.TabStop = false;
             // 
-            // pictureBox2
+            // ReceivedPic
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(440, 24);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(399, 302);
-            this.pictureBox2.TabIndex = 3;
-            this.pictureBox2.TabStop = false;
+            this.ReceivedPic.Location = new System.Drawing.Point(440, 24);
+            this.ReceivedPic.Name = "ReceivedPic";
+            this.ReceivedPic.Size = new System.Drawing.Size(399, 302);
+            this.ReceivedPic.TabIndex = 3;
+            this.ReceivedPic.TabStop = false;
             // 
             // button3
             // 
@@ -76,6 +80,10 @@
             this.button3.TabIndex = 4;
             this.button3.Text = "Opuść konferencje";
             this.button3.UseVisualStyleBackColor = false;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // label1
             // 
@@ -122,8 +130,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.ReceivedPic);
+            this.Controls.Add(this.CapturingPic);
             this.Controls.Add(this.CreateConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -131,8 +139,8 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Video Conference App";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,8 +149,8 @@
         #endregion
 
         private System.Windows.Forms.Button CreateConnection;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        //private System.Windows.Forms.PictureBox CapturingPic;
+        private System.Windows.Forms.PictureBox ReceivedPic;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

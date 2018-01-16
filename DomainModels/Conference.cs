@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DomainModels
 {
-    [Table("expenses")]
+    [Table("Conference")]
     public class Conference
     {
         [Key]
