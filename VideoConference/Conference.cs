@@ -23,6 +23,7 @@ namespace VideoConference
         const string SERVER_IP = "127.0.0.1";
         const string PORT = "4502";
         private System.Windows.Forms.Timer timer1;
+
         #region WebCam API
         const short WM_CAP = 1024;
         const int WM_CAP_DRIVER_CONNECT = WM_CAP + 10;
@@ -101,6 +102,7 @@ namespace VideoConference
         }
 
         #endregion
+
         internal System.Windows.Forms.PictureBox CapturingPic;
         public Conference()
         {
@@ -125,7 +127,7 @@ namespace VideoConference
                 //mytcpl = new TcpListener(ipaddress, 4502);
                 // Open The Port
 
-                mytcpl = new TcpListener(4503);
+                mytcpl = new TcpListener(Int32.Parse(textBox2.Text));
                 mytcpl.Start();						 // Start Listening on That Port
                 //********TU SIE SYPIE************
                 mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
@@ -170,6 +172,7 @@ namespace VideoConference
                 CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 byte[] arrImage = ms.GetBuffer();
                 myclient = new TcpClient(remote_IP, port_number);//Connecting with server
+               // myclient = new TcpClient(remote_IP, port_number);//Int32.Parse(textBox1.Text));
                 myns = myclient.GetStream();
                 mysw = new BinaryWriter(myns);
                 mysw.Write(arrImage);//send the stream to above address
@@ -212,12 +215,12 @@ namespace VideoConference
                     }));
             });
             OpenPreviewWindow();
-
+            timer1.Enabled = true;
             myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
             myth.Start();
 
       
-            timer1.Enabled = true;
+            
 
         }
 

@@ -35,10 +35,12 @@
             this.ReceivedPic = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.Messages = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).BeginInit();
             this.SuspendLayout();
@@ -86,24 +88,6 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 329);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(134, 17);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Nazwa_uzytkownika";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(437, 329);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 17);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Nazwa_uzytkownika";
-            // 
             // Messages
             // 
             this.Messages.Location = new System.Drawing.Point(23, 378);
@@ -121,15 +105,49 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "Wiadomośći z telekonferencji";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(132, 330);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(290, 22);
+            this.textBox1.TabIndex = 10;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(549, 330);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(290, 22);
+            this.textBox2.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 333);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 17);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Port wyjściowy";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(437, 335);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(96, 17);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Port docelowy";
+            // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(890, 615);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.Messages);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.Messages);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.ReceivedPic);
             this.Controls.Add(this.CapturingPic);
@@ -153,10 +171,12 @@
         //private System.Windows.Forms.PictureBox CapturingPic;
         private System.Windows.Forms.PictureBox ReceivedPic;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RichTextBox Messages;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
