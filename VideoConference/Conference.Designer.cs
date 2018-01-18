@@ -41,6 +41,8 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.sendBtn = new System.Windows.Forms.Button();
+            this.receiveBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).BeginInit();
             this.SuspendLayout();
@@ -137,11 +139,33 @@
             this.label2.TabIndex = 13;
             this.label2.Text = "Port docelowy";
             // 
+            // sendBtn
+            // 
+            this.sendBtn.Location = new System.Drawing.Point(42, 632);
+            this.sendBtn.Name = "sendBtn";
+            this.sendBtn.Size = new System.Drawing.Size(244, 49);
+            this.sendBtn.TabIndex = 14;
+            this.sendBtn.Text = "Send";
+            this.sendBtn.UseVisualStyleBackColor = true;
+            this.sendBtn.Click += new System.EventHandler(this.sendBtn_Click);
+            // 
+            // receiveBtn
+            // 
+            this.receiveBtn.Location = new System.Drawing.Point(354, 632);
+            this.receiveBtn.Name = "receiveBtn";
+            this.receiveBtn.Size = new System.Drawing.Size(256, 49);
+            this.receiveBtn.TabIndex = 15;
+            this.receiveBtn.Text = "Receive";
+            this.receiveBtn.UseVisualStyleBackColor = true;
+            this.receiveBtn.Click += new System.EventHandler(this.receiveBtn_Click);
+            // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(890, 615);
+            this.ClientSize = new System.Drawing.Size(873, 693);
+            this.Controls.Add(this.receiveBtn);
+            this.Controls.Add(this.sendBtn);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
@@ -177,6 +201,8 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button sendBtn;
+        private System.Windows.Forms.Button receiveBtn;
     }
 }
 

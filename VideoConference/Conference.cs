@@ -126,7 +126,7 @@ namespace VideoConference
                 //IPAddress ipaddress = IPAddress.Parse("127.0.0.1");
                 //mytcpl = new TcpListener(ipaddress, 4502);
                 // Open The Port
-
+               
                 mytcpl = new TcpListener(Int32.Parse(textBox2.Text));
                 mytcpl.Start();						 // Start Listening on That Port
                 //********TU SIE SYPIE************
@@ -171,8 +171,8 @@ namespace VideoConference
                 }
                 CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 byte[] arrImage = ms.GetBuffer();
-                myclient = new TcpClient(remote_IP, port_number);//Connecting with server
-               // myclient = new TcpClient(remote_IP, port_number);//Int32.Parse(textBox1.Text));
+                //myclient = new TcpClient(remote_IP, port_number);//Connecting with server
+                myclient = new TcpClient(remote_IP, Int32.Parse(textBox1.Text));
                 myns = myclient.GetStream();
                 mysw = new BinaryWriter(myns);
                 mysw.Write(arrImage);//send the stream to above address
@@ -196,33 +196,38 @@ namespace VideoConference
         }
         private void CreateConnection_Click(object obj, EventArgs e)
         {
-            var c = new XSocketClient("ws://"+ SERVER_IP + ":"+ PORT, "http://localhost", "generic");
-            c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected" + Environment.NewLine);
-            c.Controller("generic").OnOpen += (sender, connectArgs) => { 
-                this.Invoke(
-                    new Action(() =>
-                    {
-                        Messages.AppendText("Generic Open" + Environment.NewLine);
-                    }));
-                c.Controller("generic").Invoke("CallAllClients");
-            };            
-            c.Open();            
-            c.Controller("generic").On("test", () => {
-                this.Invoke(
-                    new Action(() =>
-                    {
-                        Messages.AppendText("Syntaxerror did it!!! " + Environment.NewLine);
-                    }));
-            });
-            OpenPreviewWindow();
-            timer1.Enabled = true;
-            myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
-            myth.Start();
+            //var c = new XSocketClient("ws://"+ SERVER_IP + ":"+ PORT, "http://localhost", "generic");
+            //c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected" + Environment.NewLine);
+            //c.Controller("generic").OnOpen += (sender, connectArgs) => { 
+            //    this.Invoke(
+            //        new Action(() =>
+            //        {
+            //            Messages.AppendText("Generic Open" + Environment.NewLine);
+            //        }));
+            //    c.Controller("generic").Invoke("CallAllClients");
+            //};            
+            //c.Open();            
+            //c.Controller("generic").On("test", () => {
+            //    this.Invoke(
+            //        new Action(() =>
+            //        {
+            //            Messages.AppendText("Syntaxerror did it!!! " + Environment.NewLine);
+            //        }));
+            //});
 
-      
-            
+            OpenPreviewWindow();                              
 
         }
 
+        private void sendBtn_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = true;
+        }
+
+        private void receiveBtn_Click(object sender, EventArgs e)
+        {
+            myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
+            myth.Start();
+        }
     }
 }
