@@ -25,6 +25,7 @@ namespace Server
             {
                 container.Start();
                 Console.WriteLine("Server started!");
+               
                 Console.ReadLine();
             }
         }

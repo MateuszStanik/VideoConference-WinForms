@@ -23,7 +23,7 @@ namespace VideoConference
         const string SERVER_IP = "127.0.0.1";
         const string PORT = "4502";
         private System.Windows.Forms.Timer timer1;
-
+        XSocketClient c;
         #region WebCam API
         const short WM_CAP = 1024;
         const int WM_CAP_DRIVER_CONNECT = WM_CAP + 10;
@@ -107,6 +107,26 @@ namespace VideoConference
         public Conference()
         {
             InitializeComponent();
+            c = new XSocketClient("ws://" + SERVER_IP + ":" + PORT, "http://localhost", "generic");
+            c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected" + Environment.NewLine);
+            c.Controller("generic").OnOpen += (sender, connectArgs) =>
+            {
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        Messages.AppendText("Generic Open" + Environment.NewLine);
+                    }));
+                c.Controller("generic").Invoke("CallAllClients");
+            };
+            c.Open();
+            c.Controller("generic").On("test", () =>
+            {
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        Messages.AppendText("Syntaxerror did it!!! " + Environment.NewLine);
+                    }));
+            });
         }
 
         TcpClient myclient;
@@ -123,11 +143,11 @@ namespace VideoConference
         {
             try
             {
-                //IPAddress ipaddress = IPAddress.Parse("127.0.0.1");
+                IPAddress ipaddress = IPAddress.Parse("127.0.0.1");
                 //mytcpl = new TcpListener(ipaddress, 4502);
                 // Open The Port
                
-                mytcpl = new TcpListener(Int32.Parse(textBox2.Text));
+                mytcpl = new TcpListener(ipaddress, Int32.Parse(textBox2.Text));
                 mytcpl.Start();						 // Start Listening on That Port
                 //********TU SIE SYPIE************
                 mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
@@ -196,27 +216,11 @@ namespace VideoConference
         }
         private void CreateConnection_Click(object obj, EventArgs e)
         {
-            //var c = new XSocketClient("ws://"+ SERVER_IP + ":"+ PORT, "http://localhost", "generic");
-            //c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected" + Environment.NewLine);
-            //c.Controller("generic").OnOpen += (sender, connectArgs) => { 
-            //    this.Invoke(
-            //        new Action(() =>
-            //        {
-            //            Messages.AppendText("Generic Open" + Environment.NewLine);
-            //        }));
-            //    c.Controller("generic").Invoke("CallAllClients");
-            //};            
-            //c.Open();            
-            //c.Controller("generic").On("test", () => {
-            //    this.Invoke(
-            //        new Action(() =>
-            //        {
-            //            Messages.AppendText("Syntaxerror did it!!! " + Environment.NewLine);
-            //        }));
-            //});
+            
 
-            OpenPreviewWindow();                              
-
+            OpenPreviewWindow();
+            myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
+            myth.Start();
         }
 
         private void sendBtn_Click(object sender, EventArgs e)
@@ -224,10 +228,22 @@ namespace VideoConference
             timer1.Enabled = true;
         }
 
-        private void receiveBtn_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
-            myth.Start();
+            ClosePreviewWindow();
+        }
+
+        private void Wyślij_Click(object sender, EventArgs e)
+        {
+            c.Controller("generic").On("test", () =>
+            {
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        Messages.AppendText("Test  1 " + Environment.NewLine);
+                    }));
+            });
+            c.Controller("generic").Invoke("CallAllClients");
         }
     }
 }

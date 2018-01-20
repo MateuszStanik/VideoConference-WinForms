@@ -42,7 +42,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.sendBtn = new System.Windows.Forms.Button();
-            this.receiveBtn = new System.Windows.Forms.Button();
+            this.Wyślij = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).BeginInit();
             this.SuspendLayout();
@@ -50,9 +51,9 @@
             // CreateConnection
             // 
             this.CreateConnection.BackColor = System.Drawing.Color.DarkCyan;
-            this.CreateConnection.Location = new System.Drawing.Point(23, 563);
+            this.CreateConnection.Location = new System.Drawing.Point(23, 645);
             this.CreateConnection.Name = "CreateConnection";
-            this.CreateConnection.Size = new System.Drawing.Size(263, 30);
+            this.CreateConnection.Size = new System.Drawing.Size(265, 37);
             this.CreateConnection.TabIndex = 0;
             this.CreateConnection.Text = "Utwórz konferencje";
             this.CreateConnection.UseVisualStyleBackColor = false;
@@ -79,15 +80,17 @@
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.OrangeRed;
-            this.button3.Location = new System.Drawing.Point(576, 563);
+            this.button3.Location = new System.Drawing.Point(574, 645);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(263, 30);
+            this.button3.Size = new System.Drawing.Size(265, 37);
             this.button3.TabIndex = 4;
             this.button3.Text = "Opuść konferencje";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // timer1
             // 
+            this.timer1.Interval = 150;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Messages
@@ -141,30 +144,41 @@
             // 
             // sendBtn
             // 
-            this.sendBtn.Location = new System.Drawing.Point(42, 632);
+            this.sendBtn.BackColor = System.Drawing.Color.Green;
+            this.sendBtn.Location = new System.Drawing.Point(294, 645);
             this.sendBtn.Name = "sendBtn";
-            this.sendBtn.Size = new System.Drawing.Size(244, 49);
+            this.sendBtn.Size = new System.Drawing.Size(275, 37);
             this.sendBtn.TabIndex = 14;
-            this.sendBtn.Text = "Send";
-            this.sendBtn.UseVisualStyleBackColor = true;
+            this.sendBtn.Text = "Nawiąż połączenie";
+            this.sendBtn.UseVisualStyleBackColor = false;
             this.sendBtn.Click += new System.EventHandler(this.sendBtn_Click);
             // 
-            // receiveBtn
+            // Wyślij
             // 
-            this.receiveBtn.Location = new System.Drawing.Point(354, 632);
-            this.receiveBtn.Name = "receiveBtn";
-            this.receiveBtn.Size = new System.Drawing.Size(256, 49);
-            this.receiveBtn.TabIndex = 15;
-            this.receiveBtn.Text = "Receive";
-            this.receiveBtn.UseVisualStyleBackColor = true;
-            this.receiveBtn.Click += new System.EventHandler(this.receiveBtn_Click);
+            this.Wyślij.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.Wyślij.Location = new System.Drawing.Point(575, 568);
+            this.Wyślij.Name = "Wyślij";
+            this.Wyślij.Size = new System.Drawing.Size(264, 50);
+            this.Wyślij.TabIndex = 16;
+            this.Wyślij.Text = "Wyślij wiadomość";
+            this.Wyślij.UseVisualStyleBackColor = false;
+            this.Wyślij.Click += new System.EventHandler(this.Wyślij_Click);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(23, 568);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(546, 71);
+            this.richTextBox1.TabIndex = 17;
+            this.richTextBox1.Text = "";
             // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(873, 693);
-            this.Controls.Add(this.receiveBtn);
+            this.ClientSize = new System.Drawing.Size(875, 731);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.Wyślij);
             this.Controls.Add(this.sendBtn);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -202,7 +216,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button sendBtn;
-        private System.Windows.Forms.Button receiveBtn;
+        private System.Windows.Forms.Button Wyślij;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 
