@@ -147,7 +147,7 @@ namespace VideoConference
                 //mytcpl = new TcpListener(ipaddress, 4502);
                 // Open The Port
                
-                mytcpl = new TcpListener(ipaddress, Int32.Parse(textBox2.Text));
+                mytcpl = new TcpListener(ipaddress, Int32.Parse(InputPort.Text));
                 mytcpl.Start();						 // Start Listening on That Port
                 //********TU SIE SYPIE************
                 mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
@@ -192,7 +192,7 @@ namespace VideoConference
                 CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 byte[] arrImage = ms.GetBuffer();
                 //myclient = new TcpClient(remote_IP, port_number);//Connecting with server
-                myclient = new TcpClient(remote_IP, Int32.Parse(textBox1.Text));
+                myclient = new TcpClient(remote_IP, Int32.Parse(OutputPort.Text));
                 myns = myclient.GetStream();
                 mysw = new BinaryWriter(myns);
                 mysw.Write(arrImage);//send the stream to above address
@@ -216,11 +216,19 @@ namespace VideoConference
         }
         private void CreateConnection_Click(object obj, EventArgs e)
         {
-            
-
-            OpenPreviewWindow();
-            myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
-            myth.Start();
+            if ((OutputPort.Text.Length != 4) || (InputPort.Text.Length != 4))
+            {
+             MessageBox.Show("Nie podano właściwych portów.",
+                "Uwaga!",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Exclamation,
+                MessageBoxDefaultButton.Button1);
+            }
+            else{
+                OpenPreviewWindow();
+                myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
+                myth.Start();
+            }          
         }
 
         private void sendBtn_Click(object sender, EventArgs e)
@@ -235,15 +243,19 @@ namespace VideoConference
 
         private void Wyślij_Click(object sender, EventArgs e)
         {
+            string content = "";
+            content = Message.Text;
             c.Controller("generic").On("test", () =>
             {
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText("Test  1 " + Environment.NewLine);
+                        Messages.AppendText(content + Environment.NewLine);
                     }));
             });
             c.Controller("generic").Invoke("CallAllClients");
+            Message.Text = "";
+            Message.Focus();
         }
     }
 }

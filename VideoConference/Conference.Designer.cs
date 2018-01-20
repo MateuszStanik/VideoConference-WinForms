@@ -37,13 +37,13 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Messages = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.OutputPort = new System.Windows.Forms.TextBox();
+            this.InputPort = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.sendBtn = new System.Windows.Forms.Button();
             this.Wyślij = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.Message = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).BeginInit();
             this.SuspendLayout();
@@ -110,19 +110,19 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "Wiadomośći z telekonferencji";
             // 
-            // textBox1
+            // OutputPort
             // 
-            this.textBox1.Location = new System.Drawing.Point(132, 330);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(290, 22);
-            this.textBox1.TabIndex = 10;
+            this.OutputPort.Location = new System.Drawing.Point(132, 330);
+            this.OutputPort.Name = "OutputPort";
+            this.OutputPort.Size = new System.Drawing.Size(290, 22);
+            this.OutputPort.TabIndex = 10;
             // 
-            // textBox2
+            // InputPort
             // 
-            this.textBox2.Location = new System.Drawing.Point(549, 330);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(290, 22);
-            this.textBox2.TabIndex = 11;
+            this.InputPort.Location = new System.Drawing.Point(549, 330);
+            this.InputPort.Name = "InputPort";
+            this.InputPort.Size = new System.Drawing.Size(290, 22);
+            this.InputPort.TabIndex = 11;
             // 
             // label1
             // 
@@ -164,26 +164,26 @@
             this.Wyślij.UseVisualStyleBackColor = false;
             this.Wyślij.Click += new System.EventHandler(this.Wyślij_Click);
             // 
-            // richTextBox1
+            // Message
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(23, 568);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(546, 71);
-            this.richTextBox1.TabIndex = 17;
-            this.richTextBox1.Text = "";
+            this.Message.Location = new System.Drawing.Point(23, 568);
+            this.Message.Name = "Message";
+            this.Message.Size = new System.Drawing.Size(546, 71);
+            this.Message.TabIndex = 17;
+            this.Message.Text = "";
             // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(875, 731);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.Message);
             this.Controls.Add(this.Wyślij);
             this.Controls.Add(this.sendBtn);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.InputPort);
+            this.Controls.Add(this.OutputPort);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.button3);
@@ -211,13 +211,13 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.RichTextBox Messages;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox OutputPort;
+        private System.Windows.Forms.TextBox InputPort;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button sendBtn;
         private System.Windows.Forms.Button Wyślij;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox Message;
     }
 }
 
