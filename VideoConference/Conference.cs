@@ -14,6 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using XSockets;
+using AForge.Video;
+using AForge.Video.DirectShow;
 
 namespace VideoConference
 {
@@ -113,6 +115,9 @@ namespace VideoConference
 
         internal System.Windows.Forms.PictureBox CapturingPic;
 
+        private FilterInfoCollection cams;
+        private VideoCaptureDevice cam;
+
         public Conference(Welcome wlc)
         {
             InitializeComponent();
@@ -122,6 +127,10 @@ namespace VideoConference
             initializeXSocket();
 
             welcome = wlc;
+
+            cams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            cam = new VideoCaptureDevice(cams[0].MonikerString);
+            cam.NewFrame += new NewFrameEventHandler(newFrame);
         }
 
         public void initializeXSocket()
@@ -249,7 +258,7 @@ namespace VideoConference
         //        CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
         //        byte[] arrImage = ms.GetBuffer();
         //        //myclient = new TcpClient(remote_IP, port_number);//Connecting with server
-        //        myclient = new TcpClient(remote_IP, Int32.Parse(OutputPort.Text));
+        //        myclient = new TcpClient(remote_IP, 8000);
         //        myns = myclient.GetStream();
         //        mysw = new BinaryWriter(myns);
         //        mysw.Write(arrImage);//send the stream to above address
@@ -267,14 +276,19 @@ namespace VideoConference
         //    }
         //}
 
-        private void SendVideoFrame()
-        {
+        
 
+        private void newFrame(object sender, NewFrameEventArgs eventArgs)
+        {
+            Bitmap bitmap = eventArgs.Frame;
+            Bitmap resized = new Bitmap(bitmap, new Size(CapturingPic.Width, CapturingPic.Height));
+            CapturingPic.Image = resized;
         }
+
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            SendVideoFrame();
+          //  Start_Sending_Video_Conference(SERVER_IP, 7000);
         }
         //private void CreateConnection_Click(object obj, EventArgs e)
         //{
@@ -297,11 +311,12 @@ namespace VideoConference
         {
             if (showMe.Enabled)
             {
-                OpenPreviewWindow();
+                //OpenPreviewWindow();
                 hideMe.Enabled = true;
                 showMe.Enabled = false;
                 Messages.AppendText("You are now visible to others" + Environment.NewLine);
                 timer.Enabled = true;
+                cam.Start();
             }
         }
 
@@ -309,12 +324,12 @@ namespace VideoConference
         {
             if (hideMe.Enabled)
             {
+                cam.Stop();
                 timer.Enabled = false;
-                ClosePreviewWindow();
+                //ClosePreviewWindow();
                 hideMe.Enabled = false;
                 showMe.Enabled = true;
                 Messages.AppendText("You are now hidden" + Environment.NewLine);
-                timer.Enabled = true;
             }
         }
 

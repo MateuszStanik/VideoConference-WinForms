@@ -72,7 +72,7 @@
             this.hideMe.UseVisualStyleBackColor = false;
             this.hideMe.Click += new System.EventHandler(this.hideMe_Click);
             // 
-            // timer1
+            // timer
             // 
             this.timer.Interval = 150;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
