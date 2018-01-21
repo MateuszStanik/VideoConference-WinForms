@@ -117,6 +117,8 @@ namespace VideoConference
         {
             InitializeComponent();
 
+            hideMe.Enabled = false;
+
             initializeXSocket();
 
             welcome = wlc;
@@ -293,14 +295,27 @@ namespace VideoConference
 
         private void showMe_Click(object sender, EventArgs e)
         {
-            timer.Enabled = true;
-            OpenPreviewWindow();
+            if (showMe.Enabled)
+            {
+                OpenPreviewWindow();
+                hideMe.Enabled = true;
+                showMe.Enabled = false;
+                Messages.AppendText("You are now visible to others" + Environment.NewLine);
+                timer.Enabled = true;
+            }
         }
 
         private void hideMe_Click(object sender, EventArgs e)
         {
-            timer.Enabled = false;
-            ClosePreviewWindow();
+            if (hideMe.Enabled)
+            {
+                timer.Enabled = false;
+                ClosePreviewWindow();
+                hideMe.Enabled = false;
+                showMe.Enabled = true;
+                Messages.AppendText("You are now hidden" + Environment.NewLine);
+                timer.Enabled = true;
+            }
         }
 
         private void SendMsg_Click(object sender, EventArgs e)
