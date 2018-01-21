@@ -32,11 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Conference));
             this.CapturingPic = new System.Windows.Forms.PictureBox();
             this.ReceivedPic = new System.Windows.Forms.PictureBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.hideMe = new System.Windows.Forms.Button();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.Messages = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.sendBtn = new System.Windows.Forms.Button();
+            this.showMe = new System.Windows.Forms.Button();
             this.SendMsg = new System.Windows.Forms.Button();
             this.Message = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
@@ -61,21 +61,21 @@
             this.ReceivedPic.TabIndex = 3;
             this.ReceivedPic.TabStop = false;
             // 
-            // button3
+            // hideMe
             // 
-            this.button3.BackColor = System.Drawing.Color.OrangeRed;
-            this.button3.Location = new System.Drawing.Point(574, 605);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(265, 37);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Ukryj mnie";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.hideMe.BackColor = System.Drawing.Color.OrangeRed;
+            this.hideMe.Location = new System.Drawing.Point(574, 605);
+            this.hideMe.Name = "hideMe";
+            this.hideMe.Size = new System.Drawing.Size(265, 37);
+            this.hideMe.TabIndex = 4;
+            this.hideMe.Text = "Ukryj mnie";
+            this.hideMe.UseVisualStyleBackColor = false;
+            this.hideMe.Click += new System.EventHandler(this.hideMe_Click);
             // 
             // timer1
             // 
-            this.timer1.Interval = 150;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer.Interval = 150;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // Messages
             // 
@@ -94,16 +94,16 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "Wiadomośći z telekonferencji";
             // 
-            // sendBtn
+            // showMe
             // 
-            this.sendBtn.BackColor = System.Drawing.Color.Green;
-            this.sendBtn.Location = new System.Drawing.Point(294, 605);
-            this.sendBtn.Name = "sendBtn";
-            this.sendBtn.Size = new System.Drawing.Size(275, 37);
-            this.sendBtn.TabIndex = 14;
-            this.sendBtn.Text = "Pokaż mnie";
-            this.sendBtn.UseVisualStyleBackColor = false;
-            this.sendBtn.Click += new System.EventHandler(this.sendBtn_Click);
+            this.showMe.BackColor = System.Drawing.Color.Green;
+            this.showMe.Location = new System.Drawing.Point(294, 605);
+            this.showMe.Name = "showMe";
+            this.showMe.Size = new System.Drawing.Size(275, 37);
+            this.showMe.TabIndex = 14;
+            this.showMe.Text = "Pokaż mnie";
+            this.showMe.UseVisualStyleBackColor = false;
+            this.showMe.Click += new System.EventHandler(this.showMe_Click);
             // 
             // SendMsg
             // 
@@ -131,10 +131,10 @@
             this.ClientSize = new System.Drawing.Size(875, 654);
             this.Controls.Add(this.Message);
             this.Controls.Add(this.SendMsg);
-            this.Controls.Add(this.sendBtn);
+            this.Controls.Add(this.showMe);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Messages);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.hideMe);
             this.Controls.Add(this.ReceivedPic);
             this.Controls.Add(this.CapturingPic);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -154,10 +154,10 @@
 
         //private System.Windows.Forms.PictureBox CapturingPic;
         private System.Windows.Forms.PictureBox ReceivedPic;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button hideMe;
         private System.Windows.Forms.RichTextBox Messages;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button sendBtn;
+        private System.Windows.Forms.Button showMe;
         private System.Windows.Forms.Button SendMsg;
         private System.Windows.Forms.RichTextBox Message;
     }

@@ -28,7 +28,7 @@ namespace VideoConference
 
         Welcome welcome;
 
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer;
 
         XSocketClient c;
         #region WebCam API
@@ -111,6 +111,7 @@ namespace VideoConference
         #endregion
 
         internal System.Windows.Forms.PictureBox CapturingPic;
+
         public Conference(Welcome wlc)
         {
             InitializeComponent();
@@ -129,7 +130,7 @@ namespace VideoConference
                     {
                         Messages.AppendText("Welcome to " + roomName + Environment.NewLine);
                     }));
-                c.Controller("generic").Invoke("joinClient", new { nick=nick, roomName=roomName });
+                c.Controller("generic").Invoke("joinRoom", new { nick=nick, roomName=roomName });
             };
             // custom events
             c.Controller("generic").On<string>("clientJoined", clientNick =>
@@ -165,10 +166,15 @@ namespace VideoConference
             c.Open();
         }
 
+        public void leaveRoom()
+        {
+            c.Controller("generic").Invoke("leaveRoom");
+            c.Controller("generic").Close();
+        }
+
         private void Conference_FormClosed(Object sender, FormClosedEventArgs e)
         {
-            c.Controller("generic").Invoke("leaveClient", nick);
-            c.Controller("generic").Close();
+            leaveRoom();
             welcome.Close();
         }
 
@@ -252,9 +258,14 @@ namespace VideoConference
         //    }
         //}
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void SendVideoFrame()
         {
-            //Start_Sending_Video_Conference(SERVER_IP, 4502);
+
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            SendVideoFrame();
         }
         //private void CreateConnection_Click(object obj, EventArgs e)
         //{
@@ -273,13 +284,15 @@ namespace VideoConference
         //    }          
         //}
 
-        private void sendBtn_Click(object sender, EventArgs e)
+        private void showMe_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = true;
+            timer.Enabled = true;
+            OpenPreviewWindow();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void hideMe_Click(object sender, EventArgs e)
         {
+            timer.Enabled = false;
             ClosePreviewWindow();
         }
 
@@ -287,7 +300,7 @@ namespace VideoConference
         {
             string content = "";
             content = Message.Text;
-            c.Controller("generic").Invoke("sendMsg", new { content = content, author = nick });
+            c.Controller("generic").Invoke<string>("sendMsg", content);
             Message.Text = "";
             Message.Focus();
         }

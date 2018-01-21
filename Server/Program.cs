@@ -13,20 +13,20 @@ namespace Server
     {
         protected string nick;
         protected string roomName;
-        public async Task JoinClient(dynamic data)
+        public async Task JoinRoom(dynamic data)
         {
             nick = data.nick;
             roomName = data.roomName;
-            await this.InvokeTo(p => p.roomName == this.roomName, nick, "clientJoined");
+            await this.InvokeTo(c => c.roomName == this.roomName, nick, "clientJoined");
         }
 
-        public async Task SendMsg(dynamic data)
+        public async Task SendMsg(string content)
         {
-            await this.InvokeTo(p => p.roomName == this.roomName, new { content = data.content, author = data.author }, "msgSent");
+            await this.InvokeTo(c => c.roomName == this.roomName, new { content = content, author = nick }, "msgSent");
         }
-        public async Task LeaveClient(string clientName)
+        public async Task LeaveRoom()
         {
-            await this.InvokeToAll(clientName, "clientLeft");
+            await this.InvokeTo(c => c.roomName == this.roomName, nick, "clientLeft");
         }
     }
 
