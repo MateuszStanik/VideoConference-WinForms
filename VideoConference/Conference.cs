@@ -31,6 +31,7 @@ namespace VideoConference
         private System.Windows.Forms.Timer timer;
 
         XSocketClient c;
+
         #region WebCam API
         const short WM_CAP = 1024;
         const int WM_CAP_DRIVER_CONNECT = WM_CAP + 10;
@@ -116,8 +117,13 @@ namespace VideoConference
         {
             InitializeComponent();
 
-            welcome = wlc;
+            initializeXSocket();
 
+            welcome = wlc;
+        }
+
+        public void initializeXSocket()
+        {
             c = new XSocketClient("ws://" + SERVER_IP + ":" + PORT, "http://localhost", "generic");
             // socket events
             c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected!" + Environment.NewLine);
@@ -130,7 +136,7 @@ namespace VideoConference
                     {
                         Messages.AppendText("Welcome to " + roomName + Environment.NewLine);
                     }));
-                c.Controller("generic").Invoke("joinRoom", new { nick=nick, roomName=roomName });
+                c.Controller("generic").Invoke("joinRoom", new { nick = nick, roomName = roomName });
             };
             // custom events
             c.Controller("generic").On<string>("clientJoined", clientNick =>
@@ -170,6 +176,7 @@ namespace VideoConference
         {
             c.Controller("generic").Invoke("leaveRoom");
             c.Controller("generic").Close();
+            //c.Disconnect();
         }
 
         private void Conference_FormClosed(Object sender, FormClosedEventArgs e)
