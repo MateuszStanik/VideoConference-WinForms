@@ -16,12 +16,10 @@ namespace VideoConference
         [STAThread]
         static void Main()
         {
-            Test test = new Test();
-            test.TestRequest();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Conference());
+
+            Application.Run(new Welcome());
         }
     }
 }

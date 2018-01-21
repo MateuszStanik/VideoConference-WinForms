@@ -19,10 +19,17 @@ namespace VideoConference
 {
     public partial class Conference : Form
     {
+        public string nick { get; set; }
+        public string roomName { get; set; }
 
         const string SERVER_IP = "127.0.0.1";
         const string PORT = "4502";
+        const string RECV_PORT = "7000";
+
+        Welcome welcome;
+
         private System.Windows.Forms.Timer timer1;
+
         XSocketClient c;
         #region WebCam API
         const short WM_CAP = 1024;
@@ -104,29 +111,65 @@ namespace VideoConference
         #endregion
 
         internal System.Windows.Forms.PictureBox CapturingPic;
-        public Conference()
+        public Conference(Welcome wlc)
         {
             InitializeComponent();
+
+            welcome = wlc;
+
             c = new XSocketClient("ws://" + SERVER_IP + ":" + PORT, "http://localhost", "generic");
-            c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected" + Environment.NewLine);
+            // socket events
+            c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected!" + Environment.NewLine);
+            c.OnDisconnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Disconnected!" + Environment.NewLine);
+            // controller events
             c.Controller("generic").OnOpen += (sender, connectArgs) =>
             {
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText("Generic Open" + Environment.NewLine);
+                        Messages.AppendText("Welcome to " + roomName + Environment.NewLine);
                     }));
-                c.Controller("generic").Invoke("CallAllClients");
+                c.Controller("generic").Invoke("joinClient", new { nick=nick, roomName=roomName });
             };
-            c.Open();
-            c.Controller("generic").On("test", () =>
+            // custom events
+            c.Controller("generic").On<string>("clientJoined", clientNick =>
             {
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText("Syntaxerror did it!!! " + Environment.NewLine);
+                        Messages.AppendText(clientNick + " joined room." + Environment.NewLine);
                     }));
             });
+            c.Controller("generic").On<string>("clientLeft", clientNick =>
+            {
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        Messages.AppendText(clientNick + " left room." + Environment.NewLine);
+                    }));
+            });
+            c.Controller("generic").On<dynamic>("msgSent", data =>
+            {
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        string txt = data.author + ": " + data.content + Environment.NewLine;
+                        Messages.AppendText(txt);
+                    }));
+            });
+        }
+
+        public void joinRoom(string n, string rn) {
+            nick = n;
+            roomName = rn;
+            c.Open();
+        }
+
+        private void Conference_FormClosed(Object sender, FormClosedEventArgs e)
+        {
+            c.Controller("generic").Invoke("leaveClient", nick);
+            c.Controller("generic").Close();
+            welcome.Close();
         }
 
         TcpClient myclient;
@@ -138,98 +181,97 @@ namespace VideoConference
         Socket mysocket;
         NetworkStream ns;
 
-
-        private void Start_Receiving_Video_Conference()
-        {
-            try
-            {
-                IPAddress ipaddress = IPAddress.Parse("127.0.0.1");
-                //mytcpl = new TcpListener(ipaddress, 4502);
-                // Open The Port
+        //private void Start_Receiving_Video_Conference()
+        //{
+        //    try
+        //    {
+        //        IPAddress ipaddress = IPAddress.Parse("127.0.0.1");
+        //        //mytcpl = new TcpListener(ipaddress, 4502);
+        //        // Open The Port
                
-                mytcpl = new TcpListener(ipaddress, Int32.Parse(InputPort.Text));
-                mytcpl.Start();						 // Start Listening on That Port
-                //********TU SIE SYPIE************
-                mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
-                ns = new NetworkStream(mysocket);	 // Receives The Binary Data From Port
+        //        mytcpl = new TcpListener(ipaddress, Int32.Parse(InputPort.Text));
+        //        mytcpl.Start();						 // Start Listening on That Port
+        //        //********TU SIE SYPIE************
+        //        mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
+        //        ns = new NetworkStream(mysocket);	 // Receives The Binary Data From Port
 
-                ReceivedPic.Image = Image.FromStream(ns);
-                mytcpl.Stop();							 // Close TCP Session
+        //        ReceivedPic.Image = Image.FromStream(ns);
+        //        mytcpl.Stop();							 // Close TCP Session
 
-                if (mysocket.Connected == true)		     // Looping While Connected to Receive Another Message 
-                {
-                    while (true)
-                    {
-                        Start_Receiving_Video_Conference();				 // Back to First Method
-                    }
-                }
-                myns.Flush();
+        //        if (mysocket.Connected == true)		     // Looping While Connected to Receive Another Message 
+        //        {
+        //            while (true)
+        //            {
+        //                Start_Receiving_Video_Conference();				 // Back to First Method
+        //            }
+        //        }
+        //        myns.Flush();
 
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Video Conference Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //    }
+        //    catch (Exception ex) {
+        //        MessageBox.Show(ex.Message, "Video Conference Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
 
-        private void Start_Sending_Video_Conference(string remote_IP, int port_number)
-        {
-            try
-            {
-                ms = new MemoryStream();// Store it in Binary Array as Stream
-                IDataObject data;
-                Image bmap;
-                //  Copy image to clipboard
-                SendMessage(hHwnd, WM_CAP_EDIT_COPY, 0, 0);
+        //private void Start_Sending_Video_Conference(string remote_IP, int port_number)
+        //{
+        //    try
+        //    {
+        //        ms = new MemoryStream();// Store it in Binary Array as Stream
+        //        IDataObject data;
+        //        Image bmap;
+        //        //  Copy image to clipboard
+        //        SendMessage(hHwnd, WM_CAP_EDIT_COPY, 0, 0);
 
-                //  Get image from clipboard and convert it to a bitmap
-                data = Clipboard.GetDataObject();
+        //        //  Get image from clipboard and convert it to a bitmap
+        //        data = Clipboard.GetDataObject();
 
-                if (data.GetDataPresent(typeof(System.Drawing.Bitmap)))
-                {
-                    bmap = ((Image)(data.GetData(typeof(System.Drawing.Bitmap))));
-                    bmap.Save(ms, ImageFormat.Bmp);
-                }
-                CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                byte[] arrImage = ms.GetBuffer();
-                //myclient = new TcpClient(remote_IP, port_number);//Connecting with server
-                myclient = new TcpClient(remote_IP, Int32.Parse(OutputPort.Text));
-                myns = myclient.GetStream();
-                mysw = new BinaryWriter(myns);
-                mysw.Write(arrImage);//send the stream to above address
-                ms.Flush();
-                mysw.Flush();
-                myns.Flush();
-                ms.Close();
-                mysw.Close();
-                myns.Close();
-                myclient.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Video Conference Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //        if (data.GetDataPresent(typeof(System.Drawing.Bitmap)))
+        //        {
+        //            bmap = ((Image)(data.GetData(typeof(System.Drawing.Bitmap))));
+        //            bmap.Save(ms, ImageFormat.Bmp);
+        //        }
+        //        CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+        //        byte[] arrImage = ms.GetBuffer();
+        //        //myclient = new TcpClient(remote_IP, port_number);//Connecting with server
+        //        myclient = new TcpClient(remote_IP, Int32.Parse(OutputPort.Text));
+        //        myns = myclient.GetStream();
+        //        mysw = new BinaryWriter(myns);
+        //        mysw.Write(arrImage);//send the stream to above address
+        //        ms.Flush();
+        //        mysw.Flush();
+        //        myns.Flush();
+        //        ms.Close();
+        //        mysw.Close();
+        //        myns.Close();
+        //        myclient.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message, "Video Conference Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Start_Sending_Video_Conference(SERVER_IP, 4502);
+            //Start_Sending_Video_Conference(SERVER_IP, 4502);
         }
-        private void CreateConnection_Click(object obj, EventArgs e)
-        {
-            if ((OutputPort.Text.Length != 4) || (InputPort.Text.Length != 4))
-            {
-             MessageBox.Show("Nie podano właściwych portów.",
-                "Uwaga!",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Exclamation,
-                MessageBoxDefaultButton.Button1);
-            }
-            else{
-                OpenPreviewWindow();
-                myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
-                myth.Start();
-            }          
-        }
+        //private void CreateConnection_Click(object obj, EventArgs e)
+        //{
+        //    if ((OutputPort.Text.Length != 4) || (InputPort.Text.Length != 4))
+        //    {
+        //     MessageBox.Show("Nie podano właściwych portów.",
+        //        "Uwaga!",
+        //        MessageBoxButtons.OK,
+        //        MessageBoxIcon.Exclamation,
+        //        MessageBoxDefaultButton.Button1);
+        //    }
+        //    else{
+        //        OpenPreviewWindow();
+        //        myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
+        //        myth.Start();
+        //    }          
+        //}
 
         private void sendBtn_Click(object sender, EventArgs e)
         {
@@ -241,21 +283,14 @@ namespace VideoConference
             ClosePreviewWindow();
         }
 
-        private void Wyślij_Click(object sender, EventArgs e)
+        private void SendMsg_Click(object sender, EventArgs e)
         {
             string content = "";
             content = Message.Text;
-            c.Controller("generic").On("test", () =>
-            {
-                this.Invoke(
-                    new Action(() =>
-                    {
-                        Messages.AppendText(content + Environment.NewLine);
-                    }));
-            });
-            c.Controller("generic").Invoke("CallAllClients");
+            c.Controller("generic").Invoke("sendMsg", new { content = content, author = nick });
             Message.Text = "";
             Message.Focus();
         }
+
     }
 }
