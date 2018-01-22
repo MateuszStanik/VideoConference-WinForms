@@ -30,58 +30,58 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Conference));
-            this.CapturingPic = new System.Windows.Forms.PictureBox();
-            this.ReceivedPic = new System.Windows.Forms.PictureBox();
+            this.SendingPic = new System.Windows.Forms.PictureBox();
+            this.ReceivedPic1 = new System.Windows.Forms.PictureBox();
             this.hideMe = new System.Windows.Forms.Button();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.Messages = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.showMe = new System.Windows.Forms.Button();
             this.SendMsg = new System.Windows.Forms.Button();
             this.Message = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).BeginInit();
+            this.ReceivedPic2 = new System.Windows.Forms.PictureBox();
+            this.ReceivedPic3 = new System.Windows.Forms.PictureBox();
+            this.ReceivedPic4 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.SendingPic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic4)).BeginInit();
             this.SuspendLayout();
             // 
-            // CapturingPic
+            // SendingPic
             // 
-            this.CapturingPic.Image = ((System.Drawing.Image)(resources.GetObject("CapturingPic.Image")));
-            this.CapturingPic.Location = new System.Drawing.Point(23, 24);
-            this.CapturingPic.Name = "CapturingPic";
-            this.CapturingPic.Size = new System.Drawing.Size(399, 302);
-            this.CapturingPic.TabIndex = 2;
-            this.CapturingPic.TabStop = false;
+            this.SendingPic.Image = ((System.Drawing.Image)(resources.GetObject("SendingPic.Image")));
+            this.SendingPic.Location = new System.Drawing.Point(23, 24);
+            this.SendingPic.Name = "SendingPic";
+            this.SendingPic.Size = new System.Drawing.Size(411, 306);
+            this.SendingPic.TabIndex = 2;
+            this.SendingPic.TabStop = false;
             // 
-            // ReceivedPic
+            // ReceivedPic1
             // 
-            this.ReceivedPic.Image = ((System.Drawing.Image)(resources.GetObject("ReceivedPic.Image")));
-            this.ReceivedPic.Location = new System.Drawing.Point(440, 24);
-            this.ReceivedPic.Name = "ReceivedPic";
-            this.ReceivedPic.Size = new System.Drawing.Size(399, 302);
-            this.ReceivedPic.TabIndex = 3;
-            this.ReceivedPic.TabStop = false;
+            this.ReceivedPic1.Image = ((System.Drawing.Image)(resources.GetObject("ReceivedPic1.Image")));
+            this.ReceivedPic1.Location = new System.Drawing.Point(440, 24);
+            this.ReceivedPic1.Name = "ReceivedPic1";
+            this.ReceivedPic1.Size = new System.Drawing.Size(200, 150);
+            this.ReceivedPic1.TabIndex = 3;
+            this.ReceivedPic1.TabStop = false;
             // 
             // hideMe
             // 
             this.hideMe.BackColor = System.Drawing.Color.OrangeRed;
-            this.hideMe.Location = new System.Drawing.Point(574, 605);
+            this.hideMe.Location = new System.Drawing.Point(577, 458);
             this.hideMe.Name = "hideMe";
-            this.hideMe.Size = new System.Drawing.Size(265, 37);
+            this.hideMe.Size = new System.Drawing.Size(262, 37);
             this.hideMe.TabIndex = 4;
             this.hideMe.Text = "Ukryj mnie";
             this.hideMe.UseVisualStyleBackColor = false;
             this.hideMe.Click += new System.EventHandler(this.hideMe_Click);
             // 
-            // timer
-            // 
-            this.timer.Interval = 150;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // Messages
             // 
             this.Messages.Location = new System.Drawing.Point(23, 359);
             this.Messages.Name = "Messages";
-            this.Messages.Size = new System.Drawing.Size(816, 179);
+            this.Messages.Size = new System.Drawing.Size(546, 179);
             this.Messages.TabIndex = 8;
             this.Messages.Text = "";
             // 
@@ -92,14 +92,14 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(145, 13);
             this.label3.TabIndex = 9;
-            this.label3.Text = "Wiadomośći z telekonferencji";
+            this.label3.Text = "Wiadomości z telekonferencji";
             // 
             // showMe
             // 
             this.showMe.BackColor = System.Drawing.Color.Green;
-            this.showMe.Location = new System.Drawing.Point(294, 605);
+            this.showMe.Location = new System.Drawing.Point(577, 501);
             this.showMe.Name = "showMe";
-            this.showMe.Size = new System.Drawing.Size(275, 37);
+            this.showMe.Size = new System.Drawing.Size(262, 37);
             this.showMe.TabIndex = 14;
             this.showMe.Text = "Pokaż mnie";
             this.showMe.UseVisualStyleBackColor = false;
@@ -108,9 +108,9 @@
             // SendMsg
             // 
             this.SendMsg.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.SendMsg.Location = new System.Drawing.Point(575, 549);
+            this.SendMsg.Location = new System.Drawing.Point(577, 549);
             this.SendMsg.Name = "SendMsg";
-            this.SendMsg.Size = new System.Drawing.Size(264, 50);
+            this.SendMsg.Size = new System.Drawing.Size(262, 50);
             this.SendMsg.TabIndex = 16;
             this.SendMsg.Text = "Wyślij wiadomość";
             this.SendMsg.UseVisualStyleBackColor = false;
@@ -124,42 +124,78 @@
             this.Message.TabIndex = 17;
             this.Message.Text = "";
             // 
+            // ReceivedPic2
+            // 
+            this.ReceivedPic2.Image = ((System.Drawing.Image)(resources.GetObject("ReceivedPic2.Image")));
+            this.ReceivedPic2.Location = new System.Drawing.Point(646, 24);
+            this.ReceivedPic2.Name = "ReceivedPic2";
+            this.ReceivedPic2.Size = new System.Drawing.Size(200, 150);
+            this.ReceivedPic2.TabIndex = 18;
+            this.ReceivedPic2.TabStop = false;
+            // 
+            // ReceivedPic3
+            // 
+            this.ReceivedPic3.Image = ((System.Drawing.Image)(resources.GetObject("ReceivedPic3.Image")));
+            this.ReceivedPic3.Location = new System.Drawing.Point(440, 180);
+            this.ReceivedPic3.Name = "ReceivedPic3";
+            this.ReceivedPic3.Size = new System.Drawing.Size(200, 150);
+            this.ReceivedPic3.TabIndex = 19;
+            this.ReceivedPic3.TabStop = false;
+            // 
+            // ReceivedPic4
+            // 
+            this.ReceivedPic4.Image = ((System.Drawing.Image)(resources.GetObject("ReceivedPic4.Image")));
+            this.ReceivedPic4.Location = new System.Drawing.Point(646, 180);
+            this.ReceivedPic4.Name = "ReceivedPic4";
+            this.ReceivedPic4.Size = new System.Drawing.Size(200, 150);
+            this.ReceivedPic4.TabIndex = 20;
+            this.ReceivedPic4.TabStop = false;
+            // 
             // Conference
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(875, 654);
+            this.ClientSize = new System.Drawing.Size(856, 613);
+            this.Controls.Add(this.ReceivedPic4);
+            this.Controls.Add(this.ReceivedPic3);
+            this.Controls.Add(this.ReceivedPic2);
             this.Controls.Add(this.Message);
             this.Controls.Add(this.SendMsg);
             this.Controls.Add(this.showMe);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.hideMe);
-            this.Controls.Add(this.ReceivedPic);
-            this.Controls.Add(this.CapturingPic);
+            this.Controls.Add(this.ReceivedPic1);
+            this.Controls.Add(this.SendingPic);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Conference";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Video Conference App";
-            ((System.ComponentModel.ISupportInitialize)(this.CapturingPic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SendingPic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            this.FormClosed += Conference_FormClosed;
         }
 
         #endregion
 
         //private System.Windows.Forms.PictureBox CapturingPic;
-        private System.Windows.Forms.PictureBox ReceivedPic;
+        private System.Windows.Forms.PictureBox ReceivedPic1;
         private System.Windows.Forms.Button hideMe;
         private System.Windows.Forms.RichTextBox Messages;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button showMe;
         private System.Windows.Forms.Button SendMsg;
         private System.Windows.Forms.RichTextBox Message;
+        private System.Windows.Forms.PictureBox ReceivedPic2;
+        private System.Windows.Forms.PictureBox ReceivedPic3;
+        private System.Windows.Forms.PictureBox ReceivedPic4;
     }
 }
 

@@ -16,117 +16,56 @@ using System.Windows.Forms;
 using XSockets;
 using AForge.Video;
 using AForge.Video.DirectShow;
+using XSockets.Core.Common.Socket.Event.Interface;
 
 namespace VideoConference
 {
+    public struct GuestData
+    {
+        public int order { get; set; }
+        public string nick { get; set; }
+    }
+
     public partial class Conference : Form
     {
-        public string nick { get; set; }
-        public string roomName { get; set; }
-
         const string SERVER_IP = "127.0.0.1";
         const string PORT = "4502";
         const string RECV_PORT = "7000";
 
-        Welcome welcome;
+        public string nick { get; set; }
+        public string roomName { get; set; }
+        public int sid { get; set; }
 
-        private System.Windows.Forms.Timer timer;
+        Dictionary<int, GuestData> sidToGuest;
 
         XSocketClient c;
-
-        #region WebCam API
-        const short WM_CAP = 1024;
-        const int WM_CAP_DRIVER_CONNECT = WM_CAP + 10;
-        const int WM_CAP_DRIVER_DISCONNECT = WM_CAP + 11;
-        const int WM_CAP_EDIT_COPY = WM_CAP + 30;
-        const int WM_CAP_SET_PREVIEW = WM_CAP + 50;
-        const int WM_CAP_SET_PREVIEWRATE = WM_CAP + 52;
-        const int WM_CAP_SET_SCALE = WM_CAP + 53;
-        const int WS_CHILD = 1073741824;
-        const int WS_VISIBLE = 268435456;
-        const short SWP_NOMOVE = 2;
-        const short SWP_NOSIZE = 1;
-        const short SWP_NOZORDER = 4;
-        const short HWND_BOTTOM = 1;
-        int iDevice = 0;
-        int hHwnd;
-        [System.Runtime.InteropServices.DllImport("user32", EntryPoint = "SendMessageA")]
-        static extern int SendMessage(int hwnd, int wMsg, int wParam, [MarshalAs(UnmanagedType.AsAny)]
-            object lParam);
-        [System.Runtime.InteropServices.DllImport("user32", EntryPoint = "SetWindowPos")]
-        static extern int SetWindowPos(int hwnd, int hWndInsertAfter, int x, int y, int cx, int cy, int wFlags);
-        [System.Runtime.InteropServices.DllImport("user32")]
-        static extern bool DestroyWindow(int hndw);
-        [System.Runtime.InteropServices.DllImport("avicap32.dll")]
-        static extern int capCreateCaptureWindowA(string lpszWindowName, int dwStyle, int x, int y, int nWidth, short nHeight, int hWndParent, int nID);
-        [System.Runtime.InteropServices.DllImport("avicap32.dll")]
-        static extern bool capGetDriverDescriptionA(short wDriver, string lpszName, int cbName, string lpszVer, int cbVer);
-        private void OpenPreviewWindow()
-        {
-            int iHeight = CapturingPic.Height;
-            int iWidth = CapturingPic.Width;
-            // 
-            //  Open Preview window in picturebox
-            // 
-            hHwnd = capCreateCaptureWindowA(iDevice.ToString(), (WS_VISIBLE | WS_CHILD), 0, 0, 640, 480, CapturingPic.Handle.ToInt32(), 0);
-            // 
-            //  Connect to device
-            // 
-            if (SendMessage(hHwnd, WM_CAP_DRIVER_CONNECT, iDevice, 0) == 1)
-            {
-                // 
-                // Set the preview scale
-                // 
-                SendMessage(hHwnd, WM_CAP_SET_SCALE, 1, 0);
-                // 
-                // Set the preview rate in milliseconds
-                // 
-                SendMessage(hHwnd, WM_CAP_SET_PREVIEWRATE, 66, 0);
-                // 
-                // Start previewing the image from the camera
-                // 
-                SendMessage(hHwnd, WM_CAP_SET_PREVIEW, 1, 0);
-                // 
-                //  Resize window to fit in picturebox
-                // 
-                SetWindowPos(hHwnd, HWND_BOTTOM, 0, 0, iWidth, iHeight, (SWP_NOMOVE | SWP_NOZORDER));
-            }
-            else
-            {
-                // 
-                //  Error connecting to device close window
-                //  
-                DestroyWindow(hHwnd);
-            }
-        }
-        private void ClosePreviewWindow()
-        {
-            // 
-            //  Disconnect from device
-            // 
-            SendMessage(hHwnd, WM_CAP_DRIVER_DISCONNECT, iDevice, 0);
-            // 
-            //  close window
-            // 
-            DestroyWindow(hHwnd);
-        }
-
-        #endregion
-
-        internal System.Windows.Forms.PictureBox CapturingPic;
+        Welcome welcome;
+        internal System.Windows.Forms.PictureBox SendingPic;
+        internal System.Windows.Forms.PictureBox ReceivePic1;
+        internal System.Windows.Forms.PictureBox ReceivePic2;
+        internal System.Windows.Forms.PictureBox ReceivePic3;
+        internal System.Windows.Forms.PictureBox ReceivePic4;
 
         private FilterInfoCollection cams;
         private VideoCaptureDevice cam;
+        private System.Windows.Forms.PictureBox[] receivePics;
 
         public Conference(Welcome wlc)
         {
             InitializeComponent();
-
             hideMe.Enabled = false;
+            receivePics = new System.Windows.Forms.PictureBox[5];
+            receivePics[0] = ReceivedPic1;
+            receivePics[1] = ReceivedPic2;
+            receivePics[2] = ReceivedPic3;
+            receivePics[3] = ReceivedPic4;
+            welcome = wlc;
+
+            Random rnd = new Random();
+            sid = rnd.Next();
+            sidToGuest = new Dictionary<int, GuestData>();
 
             initializeXSocket();
-
-            welcome = wlc;
 
             cams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             cam = new VideoCaptureDevice(cams[0].MonikerString);
@@ -147,32 +86,60 @@ namespace VideoConference
                     {
                         Messages.AppendText("Welcome to " + roomName + Environment.NewLine);
                     }));
-                c.Controller("generic").Invoke("joinRoom", new { nick = nick, roomName = roomName });
+                c.Controller("generic").Invoke("joinRoom", new { sid=sid, nick = nick, roomName = roomName });
             };
             // custom events
-            c.Controller("generic").On<string>("clientJoined", clientNick =>
+            c.Controller("generic").On<dynamic>("clientJoined", data =>
             {
+                int dorder = data.order;
+                string dnick = data.nick;
+                int dsid = data.sid;
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText(clientNick + " joined room." + Environment.NewLine);
+                        Messages.AppendText(dnick + " joined room." + Environment.NewLine);
                     }));
+                sidToGuest.Add(dsid, new GuestData { order=dorder, nick=dnick });
             });
-            c.Controller("generic").On<string>("clientLeft", clientNick =>
+            c.Controller("generic").On<int>("clientLeft", clientSid =>
             {
+                GuestData g = sidToGuest[clientSid];
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText(clientNick + " left room." + Environment.NewLine);
+                        Messages.AppendText(g.nick + " left room." + Environment.NewLine);
                     }));
+                sidToGuest.Remove(clientSid);
             });
             c.Controller("generic").On<dynamic>("msgSent", data =>
             {
+                string dcontent = data.content;
+                int dsid = data.authorSid;
+                GuestData g = sidToGuest[dsid];
                 this.Invoke(
                     new Action(() =>
                     {
-                        string txt = data.author + ": " + data.content + Environment.NewLine;
-                        Messages.AppendText(txt);
+                        Messages.AppendText(g.nick + ": " + dcontent + Environment.NewLine);
+                    }));
+            });
+            c.Controller("generic").On<dynamic>("receiveFrame", data =>
+            {
+                int dsid = (int)data.sid;
+                byte[] dframe = data.frame;
+                //Bitmap dframe = (Imessage)data.frame;
+                GuestData g = sidToGuest[dsid];
+                GuestData me = sidToGuest[sid];
+                int order = g.order - (g.order > me.order ? 1 : 0);
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        Messages.AppendText(dsid + " " + order + " sends frame " + Environment.NewLine);
+                        //using (var stream = new MemoryStream(dframe))
+                        //{
+                        //    Bitmap frame = new Bitmap(stream);
+                        //    receivePics[order].Image = frame;
+                        //}
+                        //receivePics[order].Image = dframe;
                     }));
             });
         }
@@ -190,132 +157,39 @@ namespace VideoConference
             //c.Disconnect();
         }
 
+        public void sendFrame(Bitmap frame)
+        {
+            Bitmap resized = new Bitmap(frame, new Size(ReceivedPic1.Width, ReceivedPic1.Height));
+            using (var stream = new MemoryStream())
+            {
+                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                c.Controller("generic").Invoke("sendFrame", stream.ToArray());
+            }
+            //c.Controller("generic").Invoke<Bitmap>("sendFrame", frame.);
+        }
+
         private void Conference_FormClosed(Object sender, FormClosedEventArgs e)
         {
             leaveRoom();
             welcome.Close();
         }
 
-        TcpClient myclient;
-        MemoryStream ms;
-        NetworkStream myns;
-        BinaryWriter mysw;
-        Thread myth;
-        TcpListener mytcpl;
-        Socket mysocket;
-        NetworkStream ns;
-
-        //private void Start_Receiving_Video_Conference()
-        //{
-        //    try
-        //    {
-        //        IPAddress ipaddress = IPAddress.Parse("127.0.0.1");
-        //        //mytcpl = new TcpListener(ipaddress, 4502);
-        //        // Open The Port
-               
-        //        mytcpl = new TcpListener(ipaddress, Int32.Parse(InputPort.Text));
-        //        mytcpl.Start();						 // Start Listening on That Port
-        //        //********TU SIE SYPIE************
-        //        mysocket = mytcpl.AcceptSocket();		 // Accept Any Request From Client and Start a Session
-        //        ns = new NetworkStream(mysocket);	 // Receives The Binary Data From Port
-
-        //        ReceivedPic.Image = Image.FromStream(ns);
-        //        mytcpl.Stop();							 // Close TCP Session
-
-        //        if (mysocket.Connected == true)		     // Looping While Connected to Receive Another Message 
-        //        {
-        //            while (true)
-        //            {
-        //                Start_Receiving_Video_Conference();				 // Back to First Method
-        //            }
-        //        }
-        //        myns.Flush();
-
-        //    }
-        //    catch (Exception ex) {
-        //        MessageBox.Show(ex.Message, "Video Conference Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
-
-        //private void Start_Sending_Video_Conference(string remote_IP, int port_number)
-        //{
-        //    try
-        //    {
-        //        ms = new MemoryStream();// Store it in Binary Array as Stream
-        //        IDataObject data;
-        //        Image bmap;
-        //        //  Copy image to clipboard
-        //        SendMessage(hHwnd, WM_CAP_EDIT_COPY, 0, 0);
-
-        //        //  Get image from clipboard and convert it to a bitmap
-        //        data = Clipboard.GetDataObject();
-
-        //        if (data.GetDataPresent(typeof(System.Drawing.Bitmap)))
-        //        {
-        //            bmap = ((Image)(data.GetData(typeof(System.Drawing.Bitmap))));
-        //            bmap.Save(ms, ImageFormat.Bmp);
-        //        }
-        //        CapturingPic.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-        //        byte[] arrImage = ms.GetBuffer();
-        //        //myclient = new TcpClient(remote_IP, port_number);//Connecting with server
-        //        myclient = new TcpClient(remote_IP, 8000);
-        //        myns = myclient.GetStream();
-        //        mysw = new BinaryWriter(myns);
-        //        mysw.Write(arrImage);//send the stream to above address
-        //        ms.Flush();
-        //        mysw.Flush();
-        //        myns.Flush();
-        //        ms.Close();
-        //        mysw.Close();
-        //        myns.Close();
-        //        myclient.Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Video Conference Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
-
-        
-
         private void newFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            Bitmap bitmap = eventArgs.Frame;
-            Bitmap resized = new Bitmap(bitmap, new Size(CapturingPic.Width, CapturingPic.Height));
-            CapturingPic.Image = resized;
+            Bitmap frame = eventArgs.Frame;
+            Bitmap resized = new Bitmap(frame, new Size(SendingPic.Width, SendingPic.Height));
+            SendingPic.Image = resized;
+            sendFrame(frame);
         }
 
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-          //  Start_Sending_Video_Conference(SERVER_IP, 7000);
-        }
-        //private void CreateConnection_Click(object obj, EventArgs e)
-        //{
-        //    if ((OutputPort.Text.Length != 4) || (InputPort.Text.Length != 4))
-        //    {
-        //     MessageBox.Show("Nie podano właściwych portów.",
-        //        "Uwaga!",
-        //        MessageBoxButtons.OK,
-        //        MessageBoxIcon.Exclamation,
-        //        MessageBoxDefaultButton.Button1);
-        //    }
-        //    else{
-        //        OpenPreviewWindow();
-        //        myth = new Thread(new System.Threading.ThreadStart(Start_Receiving_Video_Conference)); // Start Thread Session
-        //        myth.Start();
-        //    }          
-        //}
 
         private void showMe_Click(object sender, EventArgs e)
         {
             if (showMe.Enabled)
             {
-                //OpenPreviewWindow();
                 hideMe.Enabled = true;
                 showMe.Enabled = false;
                 Messages.AppendText("You are now visible to others" + Environment.NewLine);
-                timer.Enabled = true;
                 cam.Start();
             }
         }
@@ -325,8 +199,6 @@ namespace VideoConference
             if (hideMe.Enabled)
             {
                 cam.Stop();
-                timer.Enabled = false;
-                //ClosePreviewWindow();
                 hideMe.Enabled = false;
                 showMe.Enabled = true;
                 Messages.AppendText("You are now hidden" + Environment.NewLine);
