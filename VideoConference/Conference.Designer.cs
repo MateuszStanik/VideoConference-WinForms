@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Conference));
             this.SendingPic = new System.Windows.Forms.PictureBox();
             this.ReceivedPic1 = new System.Windows.Forms.PictureBox();
@@ -81,6 +80,7 @@
             // 
             this.Messages.Location = new System.Drawing.Point(23, 359);
             this.Messages.Name = "Messages";
+            this.Messages.ReadOnly = true;
             this.Messages.Size = new System.Drawing.Size(546, 179);
             this.Messages.TabIndex = 8;
             this.Messages.Text = "";
@@ -180,12 +180,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.ReceivedPic4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.FormClosed += Conference_FormClosed;
+
         }
 
         #endregion
 
-        //private System.Windows.Forms.PictureBox CapturingPic;
         private System.Windows.Forms.PictureBox ReceivedPic1;
         private System.Windows.Forms.Button hideMe;
         private System.Windows.Forms.RichTextBox Messages;

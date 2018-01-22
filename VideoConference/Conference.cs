@@ -62,6 +62,9 @@ namespace VideoConference
             welcome = wlc;
             sendingDefault = (Image)SendingPic.Image.Clone();
             receivingDefault = (Image)ReceivedPic1.Image.Clone();
+            // gui events
+            FormClosed += Conference_FormClosed;
+            Message.KeyDown += Messages_KeyDown;
 
             // guest data
             Random rnd = new Random();
@@ -77,13 +80,22 @@ namespace VideoConference
             initializeXSocket();
         }
 
+        void Messages_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SendMsg_Click(this, new EventArgs());
+                e.SuppressKeyPress = true;
+            }
+        }
+
         public void initializeXSocket()
         {
             // connect
             c = new XSocketClient("ws://" + SERVER_IP + ":" + PORT, "http://localhost", "generic");
             // socket events
-            c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected!" + Environment.NewLine);
-            c.OnDisconnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Disconnected!" + Environment.NewLine);
+            //c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected!" + Environment.NewLine);
+            //c.OnDisconnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Disconnected!" + Environment.NewLine);
             // controller events
             c.Controller("generic").OnOpen += (sender, connectArgs) =>
             {
