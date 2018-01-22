@@ -30,28 +30,26 @@ namespace VideoConference
     {
         const string SERVER_IP = "127.0.0.1";
         const string PORT = "4502";
-        const string RECV_PORT = "7000";
 
-        public string nick { get; set; }
-        public string roomName { get; set; }
-        public int sid { get; set; }
+        string nick { get; set; }
+        string roomName { get; set; }
+        int sid { get; set; }
 
         Dictionary<int, GuestData> sidToGuest;
 
         XSocketClient c;
         Welcome welcome;
         internal System.Windows.Forms.PictureBox SendingPic;
-        internal System.Windows.Forms.PictureBox ReceivePic1;
-        internal System.Windows.Forms.PictureBox ReceivePic2;
-        internal System.Windows.Forms.PictureBox ReceivePic3;
-        internal System.Windows.Forms.PictureBox ReceivePic4;
+        Image sendingDefault;
+        Image receivingDefault;
 
-        private FilterInfoCollection cams;
-        private VideoCaptureDevice cam;
-        private System.Windows.Forms.PictureBox[] receivePics;
+        FilterInfoCollection cams;
+        VideoCaptureDevice cam;
+        System.Windows.Forms.PictureBox[] receivePics;
 
         public Conference(Welcome wlc)
         {
+            // gui
             InitializeComponent();
             hideMe.Enabled = false;
             receivePics = new System.Windows.Forms.PictureBox[5];
@@ -60,20 +58,25 @@ namespace VideoConference
             receivePics[2] = ReceivedPic3;
             receivePics[3] = ReceivedPic4;
             welcome = wlc;
+            sendingDefault = (Image)SendingPic.Image.Clone();
+            receivingDefault = (Image)ReceivedPic1.Image.Clone();
 
+            // guest data
             Random rnd = new Random();
             sid = rnd.Next();
             sidToGuest = new Dictionary<int, GuestData>();
 
-            initializeXSocket();
-
+            // camera 
             cams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             cam = new VideoCaptureDevice(cams[0].MonikerString);
             cam.NewFrame += new NewFrameEventHandler(newFrame);
+
+            initializeXSocket();
         }
 
         public void initializeXSocket()
         {
+            // connect
             c = new XSocketClient("ws://" + SERVER_IP + ":" + PORT, "http://localhost", "generic");
             // socket events
             c.OnConnected += (sender, eventArgs) => Messages.AppendText(Environment.NewLine + "Connected!" + Environment.NewLine);
@@ -126,20 +129,25 @@ namespace VideoConference
             {
                 int dsid = (int)data.sid;
                 byte[] dframe = data.frame;
-                //Bitmap dframe = (Imessage)data.frame;
+                bool hide = data.hide;
                 GuestData g = sidToGuest[dsid];
                 GuestData me = sidToGuest[sid];
                 int order = g.order - (g.order > me.order ? 1 : 0);
                 this.Invoke(
                     new Action(() =>
                     {
-                        Messages.AppendText(dsid + " " + order + " sends frame " + Environment.NewLine);
-                        //using (var stream = new MemoryStream(dframe))
-                        //{
-                        //    Bitmap frame = new Bitmap(stream);
-                        //    receivePics[order].Image = frame;
-                        //}
-                        //receivePics[order].Image = dframe;
+                        if (hide)
+                        {
+                            receivePics[order].Image = receivingDefault;
+                        }
+                        else
+                        {
+                            using (var stream = new MemoryStream(dframe))
+                            {
+                                Bitmap frame = new Bitmap(stream);
+                                receivePics[order].Image = frame;
+                            }
+                        }
                     }));
             });
         }
@@ -157,17 +165,6 @@ namespace VideoConference
             //c.Disconnect();
         }
 
-        public void sendFrame(Bitmap frame)
-        {
-            Bitmap resized = new Bitmap(frame, new Size(ReceivedPic1.Width, ReceivedPic1.Height));
-            using (var stream = new MemoryStream())
-            {
-                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                c.Controller("generic").Invoke("sendFrame", stream.ToArray());
-            }
-            //c.Controller("generic").Invoke<Bitmap>("sendFrame", frame.);
-        }
-
         private void Conference_FormClosed(Object sender, FormClosedEventArgs e)
         {
             leaveRoom();
@@ -182,6 +179,15 @@ namespace VideoConference
             sendFrame(frame);
         }
 
+        public void sendFrame(Bitmap frame)
+        {
+            Bitmap resized = new Bitmap(frame, new Size(ReceivedPic1.Width, ReceivedPic1.Height)); // receive pic have equal dimensions
+            using (var stream = new MemoryStream())
+            {
+                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                c.Controller("generic").Invoke("sendFrame", stream.ToArray());
+            }
+        }
 
         private void showMe_Click(object sender, EventArgs e)
         {
@@ -202,6 +208,8 @@ namespace VideoConference
                 hideMe.Enabled = false;
                 showMe.Enabled = true;
                 Messages.AppendText("You are now hidden" + Environment.NewLine);
+                SendingPic.Image = sendingDefault;
+                c.Controller("generic").Invoke("hideMe");
             }
         }
 
@@ -213,6 +221,5 @@ namespace VideoConference
             Message.Text = "";
             Message.Focus();
         }
-
     }
 }

@@ -17,13 +17,17 @@ namespace Server
         public string nick { get; set; }
         public string roomName { get; set; }
         public int order { get; set; }
-
-        public GuestData(int _sid, string _nick, string _roomName)
+        public bool inRoom()
         {
-            sid = _sid;
-            nick = _nick;
-            roomName = _roomName;
-            order = 0;
+            return order >= 0;
+        }
+
+        public GuestData()
+        {
+            sid = 0;
+            nick = "";
+            roomName = "";
+            order = -1;
         }
     }
 
@@ -54,6 +58,7 @@ namespace Server
             GuestData g = guests[sid];
             guests.Remove(sid);
             isGuest[g.order] = false;
+            g.order = -1;
         }
 
         public GuestData[] getGuests()
@@ -106,16 +111,18 @@ namespace Server
 
     public class Generic : XSocketController
     {
-        GuestData g;
+        GuestData g = new GuestData();
 
         public async void JoinRoom(dynamic data)
         {
             int sid = data.sid;
             string nick = data.nick;
             string roomName = data.roomName;
-            g = new GuestData(sid, nick, roomName);
+            g.sid = sid;
+            g.nick = nick;
+            g.roomName = roomName;
             Rooms.addGuest(g);
-            await this.InvokeTo(c => c.g.roomName == g.roomName, new { sid=g.sid, nick=g.nick, order=g.order }, "clientJoined");
+            await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, new { sid=g.sid, nick=g.nick, order=g.order }, "clientJoined");
             // only to the new guest
             foreach (GuestData gd in Rooms.getGuests(g.roomName))
             {
@@ -128,19 +135,23 @@ namespace Server
 
         public async Task SendMsg(string content)
         {
-            await this.InvokeTo(c => c.g.roomName == g.roomName, new { content = content, authorSid = g.sid }, "msgSent");
-            Console.WriteLine("snet!");
+            await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, new { content = content, authorSid = g.sid }, "msgSent");
         }
         public async Task LeaveRoom()
         {
             Rooms.removeGuest(g);
-            await this.InvokeTo(c => c.g.roomName == g.roomName, g.sid, "clientLeft");
+            await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, g.sid, "clientLeft");
         }
 
         public async Task sendFrame(IMessage message)
         {
-            byte[] blob = message.Blob.ToArray();
-            await this.InvokeTo(c => c.g.roomName == g.roomName && c.g.sid != g.sid, new { frame=blob, sid=g.sid }, "receiveFrame");
+            byte[] frame = message.Blob.ToArray();
+            await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName && c.g.sid != g.sid, new { frame = frame, sid = g.sid, hide = false }, "receiveFrame");
+        }
+
+        public async Task hideMe()
+        {
+            await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName && c.g.sid != g.sid, new { frame = new byte[1], sid = g.sid, hide = true }, "receiveFrame");
         }
     }
 
