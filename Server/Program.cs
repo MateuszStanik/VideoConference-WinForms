@@ -8,6 +8,9 @@ using XSockets.Core.XSocket;
 using XSockets.Core.XSocket.Helpers;
 using System.Drawing;
 using XSockets.Core.Common.Socket.Event.Interface;
+using UnitOfWork.Concrete;
+using Server.Models;
+using DomainModels;
 
 namespace Server
 {
@@ -111,6 +114,8 @@ namespace Server
 
     public class Generic : XSocketController
     {
+        private readonly EFDbContext db = new EFDbContext();
+
         GuestData g = new GuestData();
 
         public async void JoinRoom(dynamic data)
@@ -135,6 +140,21 @@ namespace Server
 
         public async Task SendMsg(string content)
         {
+            Messages message = new Messages();
+            message.nick = g.nick;
+            message.sid = g.sid;
+            message.roomName = g.roomName;
+            message.message = content;
+            try
+            {
+                db.message.Add(message);
+                db.SaveChanges();
+            }
+           catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            //await db.SaveChangesAsync();
             await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, new { content = content, authorSid = g.sid }, "msgSent");
         }
         public async Task LeaveRoom()

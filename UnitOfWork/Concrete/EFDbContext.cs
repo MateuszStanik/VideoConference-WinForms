@@ -17,7 +17,7 @@ namespace UnitOfWork.Concrete
         }
 
         public DbSet<Conference> conference { get; set; }
-
+        public DbSet<Messages> message { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

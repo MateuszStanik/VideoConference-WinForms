@@ -11,6 +11,6 @@ namespace UnitOfWork.Abstract
     public interface IEFDbContext : IDisposable
     {
         DbSet<Conference> conference { get; set; }
-
+        DbSet<Messages> message { get; set; }
     }
 }

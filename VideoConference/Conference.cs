@@ -39,13 +39,13 @@ namespace VideoConference
 
         XSocketClient c;
         Welcome welcome;
-        internal System.Windows.Forms.PictureBox SendingPic;
+        internal PictureBox SendingPic;
         Image sendingDefault;
         Image receivingDefault;
 
         FilterInfoCollection cams;
         VideoCaptureDevice cam;
-        System.Windows.Forms.PictureBox[] receivePics;
+        PictureBox[] receivePics;
 
         public Conference(Welcome wlc)
         {
@@ -144,6 +144,7 @@ namespace VideoConference
                         {
                             using (var stream = new MemoryStream(dframe))
                             {
+
                                 Bitmap frame = new Bitmap(stream);
                                 receivePics[order].Image = frame;
                             }
