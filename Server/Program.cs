@@ -128,7 +128,7 @@ namespace Server
             g.roomName = roomName;
             Rooms.addGuest(g);
             await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, new { sid=g.sid, nick=g.nick, order=g.order }, "clientJoined");
-            // only to the new guest
+            // tell the new guest about other guests
             foreach (GuestData gd in Rooms.getGuests(g.roomName))
             {
                 if (gd.sid != g.sid)
@@ -136,6 +136,8 @@ namespace Server
                     await this.Invoke(new { sid = gd.sid, nick = gd.nick, order = gd.order }, "clientJoined");
                 }
             }
+            Messages[] messages = db.message.Where(m => m.roomName == g.roomName).ToArray();
+            await this.Invoke(messages, "fetchMessages");
         }
 
         public async Task SendMsg(string content)
@@ -154,7 +156,6 @@ namespace Server
             {
                 Console.WriteLine(ex);
             }
-            //await db.SaveChangesAsync();
             await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, new { content = content, authorSid = g.sid }, "msgSent");
         }
         public async Task LeaveRoom()

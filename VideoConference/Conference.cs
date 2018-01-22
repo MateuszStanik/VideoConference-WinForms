@@ -17,6 +17,7 @@ using XSockets;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using XSockets.Core.Common.Socket.Event.Interface;
+using DomainModels;
 
 namespace VideoConference
 {
@@ -46,6 +47,7 @@ namespace VideoConference
         FilterInfoCollection cams;
         VideoCaptureDevice cam;
         PictureBox[] receivePics;
+        long nFrames;
 
         public Conference(Welcome wlc)
         {
@@ -70,6 +72,7 @@ namespace VideoConference
             cams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             cam = new VideoCaptureDevice(cams[0].MonikerString);
             cam.NewFrame += new NewFrameEventHandler(newFrame);
+            nFrames = 0;
 
             initializeXSocket();
         }
@@ -125,6 +128,16 @@ namespace VideoConference
                         Messages.AppendText(g.nick + ": " + dcontent + Environment.NewLine);
                     }));
             });
+            c.Controller("generic").On<Messages[]>("fetchMessages", messages =>
+            {
+                this.Invoke(
+                    new Action(() =>
+                    {
+                        foreach (Messages msg in messages) {
+                            Messages.AppendText(msg.nick + ": " + msg.message + Environment.NewLine);
+                        }
+                    }));
+            });
             c.Controller("generic").On<dynamic>("receiveFrame", data =>
             {
                 int dsid = (int)data.sid;
@@ -144,7 +157,6 @@ namespace VideoConference
                         {
                             using (var stream = new MemoryStream(dframe))
                             {
-
                                 Bitmap frame = new Bitmap(stream);
                                 receivePics[order].Image = frame;
                             }
@@ -177,6 +189,7 @@ namespace VideoConference
             Bitmap frame = eventArgs.Frame;
             Bitmap resized = new Bitmap(frame, new Size(SendingPic.Width, SendingPic.Height));
             SendingPic.Image = resized;
+            nFrames++;
             sendFrame(frame);
         }
 
@@ -185,7 +198,7 @@ namespace VideoConference
             Bitmap resized = new Bitmap(frame, new Size(ReceivedPic1.Width, ReceivedPic1.Height)); // receive pic have equal dimensions
             using (var stream = new MemoryStream())
             {
-                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Gif);
                 c.Controller("generic").Invoke("sendFrame", stream.ToArray());
             }
         }
