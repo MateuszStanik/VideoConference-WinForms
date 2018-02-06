@@ -29,7 +29,7 @@ namespace VideoConference
 
     public partial class Conference : Form
     {
-        const string SERVER_IP = "127.0.0.1";
+        const string SERVER_IP = "127.0.0.1"; // VPN address 25.72.47.50
         const string PORT = "4502";
 
         string nick { get; set; }
@@ -210,7 +210,7 @@ namespace VideoConference
             Bitmap resized = new Bitmap(frame, new Size(ReceivedPic1.Width, ReceivedPic1.Height)); // receive pic have equal dimensions
             using (var stream = new MemoryStream())
             {
-                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Gif);
+                resized.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
                 c.Controller("generic").Invoke("sendFrame", stream.ToArray());
             }
         }

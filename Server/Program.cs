@@ -120,15 +120,19 @@ namespace Server
 
         public async void JoinRoom(dynamic data)
         {
+            // spamiętaj informacje o kliencie w strukturze guest data
+            // (ponieważ data jest typu dynamic, należy rzutować pola na konkretny typ)
             int sid = data.sid;
             string nick = data.nick;
             string roomName = data.roomName;
             g.sid = sid;
             g.nick = nick;
             g.roomName = roomName;
+            // dodaj osobe do pokoju
             Rooms.addGuest(g);
+            // powiadom pozostalych rozmowcow o nowej osobie
             await this.InvokeTo(c => c.g.inRoom() && c.g.roomName == g.roomName, new { sid=g.sid, nick=g.nick, order=g.order }, "clientJoined");
-            // tell the new guest about other guests
+            // wyslij do tej nowej osoby dane pozostalych rozmowcow
             foreach (GuestData gd in Rooms.getGuests(g.roomName))
             {
                 if (gd.sid != g.sid)
@@ -136,6 +140,7 @@ namespace Server
                     await this.Invoke(new { sid = gd.sid, nick = gd.nick, order = gd.order }, "clientJoined");
                 }
             }
+            // wyslij do tej nowej osoby historie czatu
             Messages[] messages = db.message.Where(m => m.roomName == g.roomName).ToArray();
             await this.Invoke(messages, "fetchMessages");
         }
